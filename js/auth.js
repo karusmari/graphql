@@ -29,10 +29,11 @@ async function login(username, password) {
         return [false, "Login failed"];
 }
 }
-
 function isLoggedIn() {
-    return !!sessionStorage.getItem("jwt");
-}
+    const token = sessionStorage.getItem("jwt");
+    console.log("Checking if user is logged in. Token:", token);
+    return !!token;
+  }
 
 //logs out and removes the token
 function logout() {

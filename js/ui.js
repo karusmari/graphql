@@ -27,18 +27,19 @@ async function renderProfileView() {
     }
 
 
-  const [success, userData] = await fetchData('userInfo');
-  console.log("User data fetched:", { success, userData });
+  const [success, data] = await fetchData(getUserInfoQuery);
+  console.log("User data fetched:", { success, data });
 
-  if (success && userData) {
-    const login = userData.login;
+  if (success && data?.user) {
+    const login = data.user.login;
+
     document.getElementById('app').innerHTML = `
     <h2>Welcome to your profile</h2>
     <p>Username: ${login}</p> <!-- Siin näitad kasutaja infot, mis saad API-st -->
     <button id="logout-button">Log out</button>
   `;
 } else {
-    console.error("Error loading profileee:", userData);
+    console.error("Error loading profileee:", data.user);
     return;
 }
 

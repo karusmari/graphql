@@ -1,5 +1,5 @@
 const getUserInfoQuery = `
-{
+query {
   user {
     id
     firstName
@@ -19,10 +19,14 @@ const getUserInfoQuery = `
 `;
   
 const xpQuery = `
-     query {
-      userActivity {
-        date
-        activity
+  query {
+    transaction_aggregate(
+      where: {_and: [{type: {_eq: "xp"}}, {eventId: {_eq: 104}}]}
+    ) {
+      aggregate {
+        sum {
+          amount
+        }
       }
     }
-  `;
+  }`

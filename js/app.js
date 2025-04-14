@@ -1,7 +1,10 @@
 function initApp() {
+  console.log("Initializing app...");
   if (isLoggedIn()) {
+    console.log("User is logged in");
     renderProfileView(getJWT());
   } else {
+    console.log("User is not logged in");
     renderLoginView();
   }
 }
@@ -35,15 +38,14 @@ async function fetchData(query) {
       });
 
       console.log("Response status:", response.status); // Log the response status
-  
+
       if (response.ok) {
         const data = await response.json();
-        console.log("Fetched user data:", data); // Log the fetched data
+        console.log("Fetched user data:", data.data); // Log the fetched data
         return [true, data.data];
       } else {
-        const errorData = await response.json();
-        console.error("Error response:", errorData); // Log the error response
-        return [false, errorData];
+        console.error("Error response:", data.errors || "No data field"); // Log the error response
+        return [false, data.errors || "No data field"];
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -52,6 +54,7 @@ async function fetchData(query) {
   }
 
   async function fetchUserData(queryType) {
+    console.log("Fetching user data for query type:", queryType);
     switch (queryType) {
       case 'userInfo':
         console.log("using getUserInfoQuery:", getUserInfoQuery);
