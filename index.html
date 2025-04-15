@@ -10,8 +10,9 @@
 <body>
     <div id="app"> </div>
     <header>
-        <div id="user-info-header"></div>
-            <span id="username-display"></span>
+        <div id="user-header" style="display:none;">
+            <p>Logged in as: <span id="header-email"></span></p> 
+            <button id="logout-button">Log out</button>
         </div>
     </header>
 
@@ -28,6 +29,21 @@
                 <button type="submit">Login</button>
             </form>
         </div>
+
+        <div id="profile-section" style="display:none;">
+            <p><strong>User ID:</strong> <span id="id"></span></p>
+            <p><strong>Email:</strong> <span id="profile-email"></span></p>
+            <p><strong>First Name:</strong> <span id="profile-firstName"></span></p>
+            <p><strong>Last Name:</strong> <span id="profile-lastName"></span></p>
+            <p><strong>T-shirt Size:</strong> <span id="profile-tshirtSize"></span></p>
+            <p><strong>Nationality:</strong> <span id="nationality"></span></p>
+            <p><strong>Campus:</strong> <span id="campus"></span></p>
+            <p><strong>XP amount:</strong> <span id="user-xp"></span></p>
+            <p><strong>Skills:</strong> <span id="skills"></span></p>
+        </div>
+
+
+
     </main>
 
     <footer>

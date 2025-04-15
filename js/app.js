@@ -56,12 +56,15 @@ async function fetchData(query) {
   async function fetchUserData(queryType) {
     console.log("Fetching user data for query type:", queryType);
     switch (queryType) {
+      
       case 'userInfo':
         console.log("using getUserInfoQuery:", getUserInfoQuery);
         return fetchData(getUserInfoQuery);
+
       case 'userXP':
         console.log("using xpQuery:", xpQuery);
         return fetchData(xpQuery);
+
       default:
         return [false, "Unknown query type"];
     }
