@@ -16,7 +16,7 @@ main {
     background-color: rgb(223, 220, 230);
     color: rgb(5, 5, 5);
     font-family: 'Limelight', cursive;
-    min-height: 100vh;
+    min-height: 84vh;
 }
 
 #login-section {
@@ -115,16 +115,41 @@ footer {
 
 #profile-section {
     display: flex;
-    /* justify-content: center; */
+    /* justify-content: center;
     align-items:flex-start;
-    /* flex-direction: column; */
+    flex-direction: column; */
     max-height: 40vh;
     max-width: 40vh;
     background-color: rgb(177, 160, 194);
     border-radius: 10px;
     font-family: Arial, Helvetica, sans-serif;
-    padding: 10px;
+    padding: 20px;
     box-sizing: border-box;
     border: solid 1px rgb(4, 4, 4);
     box-shadow: 0 4px 8px rgba(251, 119, 119, 0.2);
+    margin: 20px;
+}
+
+#skills-chart {
+    display: flex;
+    background-color: rgb(177, 160, 194);
+    border-radius: 10px;
+    padding: 25px;
+    box-sizing: border-box;
+    border: solid 1px rgb(4, 4, 4);
+    box-shadow: 0 4px 8px rgba(251, 119, 119, 0.2);
+    margin: 20px;
+}
+
+#skills-chart svg {
+    display: block;
+    width: 82vh;
+}
+
+#skills-chart text {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#skills-chart rect {
+    padding: 2px;
 }

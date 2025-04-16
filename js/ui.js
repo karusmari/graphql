@@ -21,39 +21,56 @@ async function renderProfileView() {
     return;
   }
   
-  //removes the login form
-  const loginSection = document.getElementById('login-section');
-  if (loginSection) {
-    loginSection.remove(); // Remove the login form if it exists
-  }
-  
+
+  document.getElementById('login-section')?.remove();
   document.getElementById('user-header').style.display = 'flex';
+  document.getElementById('profile-section').style.display = 'block';
+  document.getElementById('skills-chart').style.display = 'block';
   
-  //shows the profile section
-  const profileSection = document.getElementById('profile-section');
-  if (profileSection) {
-    profileSection.style.display = 'block'; 
-  }
   
   const [userInfoSuccess, userInfoData] = await fetchUserData('userInfo');
+  const [XPsuccess, xpData] = await fetchUserData('userXP');
+  if (XPsuccess) {
+    console.log("Fetched XP data:", xpData);
+  }
+
+  const [success, skillsData] = await fetchUserData('userSkills');
+  if (success) {
+    console.log("Fetched skills data:", skillsData);
+  }
   
-  if (userInfoSuccess && userInfoData?.user) {
-    const user = userInfoData.user[0];
-    const attrs = user.attrs || {};
-    const email = user.attrs?.email || "No email provided";
-    
-  document.getElementById('header-email').textContent = email;
-  document.getElementById('id').textContent = `User ID: ${user.id}`;
-  document.getElementById('profile-email').textContent = `Email: ${attrs.email || "No email provided"}`;
-  document.getElementById('profile-firstName').textContent = `First Name: ${user.firstName || 'N/A'}`;
-  document.getElementById('profile-lastName').textContent = `Last Name: ${user.lastName || 'N/A'}`;
-  document.getElementById('profile-tshirtSize').textContent = `T-shirt Size: ${attrs.tshirtSize || 'N/A'}`;
-  document.getElementById('nationality').textContent = `Nationality: ${attrs.nationality || 'N/A'}`;
-  document.getElementById('campus').textContent = `Campus: ${user.campus || 'N/A'}`;
-} else {
-  console.error("Error loading profile:", userInfoData?.user);
-  return;
-}
+
+  if (!userInfoSuccess && !userInfoData?.user) {
+    console.error("Error loading profile:", userInfoData?.user);
+    return;
+  }
+
+  const user = userInfoData.user[0];
+  const attrs = user.attrs || {};
+  const email = user.attrs?.email || "No email provided"; //vaata see yle
+  const transactions = xpData.transaction || [];
+  const xpAmount = xpData.transaction_aggregate.aggregate.sum.amount || 0;
+  const skills = skillsData?.user[0]?.skills || [];
+  
+  renderXPchart(user.xps);
+  
+  if (skills.length > 0) {
+    renderSkillChart(skills);
+  } else {
+    document.getElementById('skills-chart').textContent = 'N/A';
+  }
+  document.getElementById('graph-section').style.display = 'block';
+
+  document.getElementById('header-email').textContent = email; //vaata see yle 
+  document.getElementById('id').textContent = `${user.id || 'N/A'}`;
+  document.getElementById('profile-email').textContent = `${attrs.email || "No email provided"}`;
+  document.getElementById('profile-firstName').textContent = `${user.firstName || 'N/A'}`;
+  document.getElementById('profile-lastName').textContent = `${user.lastName || 'N/A'}`;
+  document.getElementById('profile-tshirtSize').textContent = `${attrs.tshirtSize || 'N/A'}`;
+  document.getElementById('nationality').textContent = `${attrs.nationality || 'N/A'}`;
+  document.getElementById('campus').textContent = `${user.campus || 'N/A'}`;
+  document.getElementById('user-xp').textContent = `${xpAmount || 'N/A'}`;
+
 }
 
 //handle logout button

@@ -65,6 +65,11 @@ async function fetchData(query) {
         console.log("using xpQuery:", xpQuery);
         return fetchData(xpQuery);
 
+      case 'userSkills':
+        console.log("using skills:", skillsQuery);
+        return fetchData(skillsQuery);
+
+
       default:
         return [false, "Unknown query type"];
     }
