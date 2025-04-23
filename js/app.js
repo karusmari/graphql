@@ -38,9 +38,9 @@ async function fetchData(query) {
       });
 
       console.log("Response status:", response.status); // Log the response status
+      const data = await response.json();
 
       if (response.ok) {
-        const data = await response.json();
         console.log("Fetched user data:", data.data); // Log the fetched data
         return [true, data.data];
       } else {
@@ -59,15 +59,15 @@ async function fetchData(query) {
       
       case 'userInfo':
         console.log("using getUserInfoQuery:", getUserInfoQuery);
-        return fetchData(getUserInfoQuery);
+        return await fetchData(getUserInfoQuery);
 
       case 'userXP':
         console.log("using xpQuery:", xpQuery);
-        return fetchData(xpQuery);
+        return await fetchData(xpQuery);
 
       case 'userSkills':
         console.log("using skills:", skillsQuery);
-        return fetchData(skillsQuery);
+        return await fetchData(skillsQuery);
 
 
       default:

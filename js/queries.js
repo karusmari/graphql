@@ -5,7 +5,6 @@ query {
     firstName
     lastName
     login
-    campus
     auditRatio
     totalUp
     totalDown
@@ -19,31 +18,17 @@ query {
 `;
   
 const xpQuery = `
-  query {
-    transaction(
-      where: {type: {_eq: "xp"}}
-      order_by: {createdAt: asc}
-    ) {
-      amount
-      createdAt
-      path
-      type
-    }
-    transaction_aggregate(
-      where: {
-        _and: [
-          {type: {_eq: "xp"}},
-          {eventId: {_eq: 104}}
-        ]
-      }
-    ) {
-      aggregate {
-        sum {
-          amount
-        }
-      }
-    }
-  }`
+query {
+  transaction(
+    where: {type: {_eq: "xp"}}
+    order_by: {createdAt: asc}
+    limit: 1000
+  ) {
+    amount
+    createdAt
+    path
+  }
+}`
 
 
 const skillsQuery = `
