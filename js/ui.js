@@ -21,6 +21,8 @@ async function renderProfileView() {
     return;
   }
 
+  window.scrollTo(0, 0); 
+
   document.getElementById('login-section')?.remove();
   document.getElementById('user-header').style.display = 'flex';
   document.getElementById('profile-section').style.display = 'flex';
@@ -28,38 +30,40 @@ async function renderProfileView() {
   
   
   const [userInfoSuccess, userInfoData] = await fetchUserData('userInfo');
-  const [XPsuccess, xpData] = await fetchUserData('userXP');
-  if (XPsuccess) {
-    console.log("Fetched XP data:", xpData);
-  }
-
-  const [success, skillsData] = await fetchUserData('userSkills');
-  if (success) {
-    console.log("Fetched skills data:", skillsData);
-  }
+  const [xpSuccess, xpData] = await fetchUserData('userXP');
+  const [skillsSuccess, skillsData] = await fetchUserData('userSkills');
   
+  //checking if the data has been received and is valid
   if (!userInfoSuccess || !userInfoData?.user || userInfoData.user.length === 0) {
     console.error("Error loading profile:", userInfoData?.user);
     return;
   }
-  const user = userInfoData.user?.[0];
-  if (!user) {
-    console.error("User data missing from userInfoData:", userInfoData);
+
+  if (!xpSuccess || !xpData?.transaction) {
+    console.error("Error loading XP data:", xpData);
     return;
   }
-  console.log("User XP data:", user.xps);
+
+  if (!skillsSuccess || !skillsData?.user) {
+    console.error("Error loading skills data:", skillsData);
+    return;
+  }
+
+  const user = userInfoData.user?.[0];
   const attrs = user.attrs || {};
-  const email = user.attrs?.email || "No email provided"; //vaata see yle
+  const email = user.attrs?.email || "No email provided"; 
   const xpTransactions = xpData.transaction || [];
   const filteredXps = xpTransactions.filter(xp =>
     xp.path &&
-    xp.path.includes("school-curriculum") &&
-    !xp.path.includes("piscine") &&
+    !xp.path.includes("piscine-go") &&
+    (
+      !xp.path.includes("piscine-js") || 
+       xp.path.endsWith("piscine-js")
+    ) &&
     xp.createdAt &&
     !isNaN(new Date(xp.createdAt)) &&
     xp.amount > 0
   );
-  
   
   const xpAmount = user.xps && user.xps.length > 0
   ? user.xps
@@ -72,12 +76,9 @@ async function renderProfileView() {
       )
     )
       .reduce((sum, xp) => {
-        console.log("Including XP:", xp); // Logige iga XP, mis liidetakse
         return sum + xp.amount;
       }, 0)
   : 0;
-console.log("Filtered XP:", user.xps);
-console.log("XP amount:", xpAmount);
 
   
   const skills = skillsData?.user[0]?.skills || [];
@@ -90,8 +91,7 @@ console.log("XP amount:", xpAmount);
     document.getElementById('skills-chart').textContent = 'N/A';
   }
   document.getElementById('graph-section').style.display = 'block';
-
-  document.getElementById('header-email').textContent = email; //vaata see yle 
+  document.getElementById('header-email').textContent = email; 
   document.getElementById('id').textContent = `${user.id || 'N/A'}`;
   document.getElementById('profile-email').textContent = `${attrs.email || "No email provided"}`;
   document.getElementById('profile-firstName').textContent = `${user.firstName || 'N/A'}`;

@@ -1,19 +1,21 @@
+//rendering the skills chart 
 function renderSkillChart(skills) {
+    //searching DOM for the element with the id 'skills-chart' to render the chart
     const chartContainer = document.getElementById('skills-chart');
-    console.log("Chart container:", chartContainer);
     if (!chartContainer) {
         console.error("Element with ID 'skills-chart' not found in the DOM.");
         return;
-    }
+    } // Close the renderXPchart function
 
-    console.log("Skills data:", skills);
     if (!skills || skills.length === 0) {
       console.error("No skills data available to render the chart.");
       return;
     }
 
+    //removing the previous chart if it exists
     chartContainer.innerHTML = ''; // Clear previous chart
 
+    //the size of the chart
     const width = 800;
     const barHeight = 30;
     const spacing = 5;
@@ -23,6 +25,7 @@ function renderSkillChart(skills) {
     const maxSkill = 100;
     const offsetY = 40;
 
+    //creating the svg element where the diagram will be drawn
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", width);
     svg.setAttribute("height", chartHeight);
@@ -30,7 +33,7 @@ function renderSkillChart(skills) {
     skills.forEach((skill, index) => {
         const barWidth = (skill.amount / maxSkill) * (width - labelWidth); //the width of the bar
         const y = offsetY + index * (barHeight + spacing);
-        const percentage = ((skill.amount / maxSkill) * 100).toFixed(1);
+        const percentage = ((skill.amount / maxSkill) * 100).toFixed(1); //calculating the percentage
 
         //background rectagle
         const bgrect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -41,6 +44,7 @@ function renderSkillChart(skills) {
         bgrect.setAttribute("fill", "rgb(154, 153, 153)");
         svg.appendChild(bgrect);
 
+        //rectangle to show the percentage
         const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         rect.setAttribute("x", labelWidth);
         rect.setAttribute("y", y);
@@ -62,7 +66,7 @@ function renderSkillChart(skills) {
          skillsLabel.textContent = skillsText; 
          svg.appendChild(skillsLabel);
         
-        //skills name
+        //names of the skills
         const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
         label.setAttribute("x", 0);
         label.setAttribute("y", y + barHeight / 2);
@@ -74,13 +78,13 @@ function renderSkillChart(skills) {
         label.textContent = `${skillName}`;
         svg.appendChild(label);
 
-        //percentage
+        //percentage of the skill
         const percentText = document.createElementNS("http://www.w3.org/2000/svg", "text");
         percentText.setAttribute("x", labelWidth + barWidth - 5);
         percentText.setAttribute("y", y + barHeight / 2);
         percentText.setAttribute("dy", ".35em");
         percentText.setAttribute("fill", "#000"); 
-        percentText.setAttribute("font-size", "12px");
+        percentText.setAttribute("font-size", "13px");
         percentText.setAttribute("text-anchor", "end");
         percentText.textContent = `${percentage}%`;
         svg.appendChild(percentText);
@@ -101,9 +105,10 @@ function renderSkillChart(skills) {
     chartContainer.appendChild(svg); 
 }
 
+//rendering the XP chart
 function renderXPchart(xps){
-    const width = 800;
-    const height = 400;
+    const width = 850;
+    const height = 450;
     const margin = 80;
 
     //create svg element
@@ -119,7 +124,6 @@ function renderXPchart(xps){
     }
 
     const sortedXP = [...xps].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-    console.log("Sorted XP data:", sortedXP);
 
     const points = [];
     let totalXP = 0;
@@ -138,8 +142,6 @@ function renderXPchart(xps){
         });
     });
 
-        console.log("Points for the graph:", points);
-
     if (points.length === 0) {
         console.error("No valid points to render the graph.");
         return;
@@ -149,8 +151,6 @@ function renderXPchart(xps){
     const maxX = Math.max(...points.map(p => p.x));
     const maxY = Math.max(...points.map(p => p.y));
 
-    console.log("minX:", minX, "maxX:", maxX, "maxY:", maxY);
-
     const scaleX = x => {
         return margin + ((x - minX) / (maxX - minX)) * (width - 2 * margin);
     };
@@ -158,7 +158,6 @@ function renderXPchart(xps){
 
     let pathD = "M ";
     pathD += points.map(p => `${scaleX(p.x)},${scaleY(p.y)}`).join(" L ");
-    console.log("Path data:", pathD);
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", pathD);
@@ -217,7 +216,7 @@ function renderXPchart(xps){
       });
 
       // Y-axis (XP on the left side)
-    const yAxisSteps = 5;
+    const yAxisSteps = 6;
     const stepSize = 100000;
     for (let i = 0; i <= yAxisSteps; i++) {
         const value = Math.round((maxY / yAxisSteps) * i / stepSize) * stepSize;
@@ -225,16 +224,16 @@ function renderXPchart(xps){
 
         // Line (tick)
         const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        tick.setAttribute("x1", margin - 5);
+        tick.setAttribute("x1", margin - 10);
         tick.setAttribute("y1", y);
         tick.setAttribute("x2", margin);
         tick.setAttribute("y2", y);
         tick.setAttribute("stroke", "#aaa");
         svg.appendChild(tick);
 
-        // Text (label)
+        // Text (scale for the XP)
         const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        label.setAttribute("x", margin - 1);
+        label.setAttribute("x", margin - 5);
         label.setAttribute("y", y + 4);
         label.setAttribute("text-anchor", "end");
         label.setAttribute("font-size", "14");
@@ -261,7 +260,7 @@ function renderXPchart(xps){
          // Y-line (left vertical line)
          const yAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
          yAxis.setAttribute("x1", margin);
-         yAxis.setAttribute("y1", margin);
+         yAxis.setAttribute("y1", margin - 20);
          yAxis.setAttribute("x2", margin);
          yAxis.setAttribute("y2", height - margin);
          yAxis.setAttribute("stroke", "black");
@@ -269,15 +268,18 @@ function renderXPchart(xps){
          svg.appendChild(yAxis);
     }
 
-    // X-axis (dates in the bottom)
-    const xAxisSteps = 10; 
-    const step = (maxX - minX) / xAxisSteps;
+        // X-axis (dates in the bottom)
+        const xAxisSteps = 7; 
+        const step = (maxX - minX) / xAxisSteps;
+        const monthsSeen = new Set(); // to avoid duplicate month labels
 
     for (let i = 0; i <= xAxisSteps; i++) {
         const time = minX + step * i;
         const x = scaleX(time);
-        
+        const date = new Date(time);
+        const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
 
+        
         // Line (tick)
         const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
         tick.setAttribute("x1", x);
@@ -286,16 +288,21 @@ function renderXPchart(xps){
         tick.setAttribute("y2", height - margin + 5);
         tick.setAttribute("stroke", "#aaa");
         svg.appendChild(tick);
-
+        
         // Text (date)
-        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        label.setAttribute("x", x);
-        label.setAttribute("y", height - margin + 15);
-        label.setAttribute("text-anchor", "middle");
-        label.setAttribute("font-size", "12");
-        label.setAttribute("fill", "#333");
-        label.textContent = new Date(time).toLocaleDateString('en', { month: 'short', year: '2-digit' });
-        svg.appendChild(label);
+        if (!monthsSeen.has(monthKey)) {
+            monthsSeen.add(monthKey);
+            const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute("x", x);
+            label.setAttribute("y", height - margin + 20);
+            label.setAttribute("text-anchor", "middle");
+            label.setAttribute("font-size", "14");
+            label.setAttribute("font-weight", "bold");
+            label.setAttribute("fill", "#333");
+            label.textContent = new Date(time).toLocaleDateString('en', { month: 'short', year: '2-digit' });
+            svg.appendChild(label);
+    }
+}
 
         // X-line (lower horizontal line)
         const xAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -306,10 +313,6 @@ function renderXPchart(xps){
         xAxis.setAttribute("stroke", "black");
         xAxis.setAttribute("stroke-width", 1.5);
         svg.appendChild(xAxis);
-
-    }
-
-
-
-    document.getElementById("xp-chart-container").appendChild(svg);
-}
+        
+        document.getElementById("xp-chart-container").appendChild(svg);
+    } 

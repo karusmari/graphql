@@ -22,7 +22,6 @@ query {
   transaction(
     where: {type: {_eq: "xp"}}
     order_by: {createdAt: asc}
-    limit: 1000
   ) {
     amount
     createdAt

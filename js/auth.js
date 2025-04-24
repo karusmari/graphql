@@ -13,12 +13,9 @@ async function login(username, password) {
     });
     
     const data = await response.json();
-    console.log("Server response: ", data); // Log the response data
 
     if (response.ok) {
-            console.log("token before saving:", data);
             sessionStorage.setItem("jwt", data)
-            console.log("JWT saved:", sessionStorage.getItem("jwt")); // Log the saved JWT
             return [true, data];
         } else {
             console.error("Login failed: ", data.error);
@@ -31,7 +28,6 @@ async function login(username, password) {
 }
 function isLoggedIn() {
     const token = sessionStorage.getItem("jwt");
-    console.log("Checking if user is logged in. Token:", token);
     return !!token;
   }
 

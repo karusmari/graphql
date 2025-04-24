@@ -1,30 +1,27 @@
+//to check if the user is logged in or not
 function initApp() {
-  console.log("Initializing app...");
   if (isLoggedIn()) {
-    console.log("User is logged in");
     renderProfileView(getJWT());
   } else {
-    console.log("User is not logged in");
     renderLoginView();
   }
 }
-
 window.addEventListener('load', initApp);
 
-
+//function to query the user data 
 async function fetchData(query) {
-  console.log("Fetching user data...", query);
     const token = sessionStorage.getItem("jwt");
 
-    if (!query) {
-      console.error("No query provided");
-      return [false, "No query provided"];
-    }
-  
     //check if the user is logged in
     if (!token) {
       console.warn("Not logged in - no token found");
       return [false, "Not logged in"];
+    }
+
+    //check if the query is valid
+    if (!query) {
+      console.error("No query provided");
+      return [false, "No query provided"];
     }
   
     try {
@@ -37,14 +34,13 @@ async function fetchData(query) {
         body: JSON.stringify({ query: query })
       });
 
-      console.log("Response status:", response.status); // Log the response status
       const data = await response.json();
 
+      //checking if the response is ok
       if (response.ok) {
-        console.log("Fetched user data:", data.data); // Log the fetched data
         return [true, data.data];
       } else {
-        console.error("Error response:", data.errors || "No data field"); // Log the error response
+        console.error("Error response:", data.errors || "No data field"); 
         return [false, data.errors || "No data field"];
       }
     } catch (error) {
@@ -53,24 +49,22 @@ async function fetchData(query) {
     }
   }
 
-  async function fetchUserData(queryType) {
-    console.log("Fetching user data for query type:", queryType);
-    switch (queryType) {
-      
-      case 'userInfo':
-        console.log("using getUserInfoQuery:", getUserInfoQuery);
-        return await fetchData(getUserInfoQuery);
 
-      case 'userXP':
-        console.log("using xpQuery:", xpQuery);
-        return await fetchData(xpQuery);
+//function to query the data based on the query type
+async function fetchUserData(queryType) {
+    const queries = {
+      userInfo: getUserInfoQuery,
+      userXP: xpQuery,
+      userSkills: skillsQuery
+  };
 
-      case 'userSkills':
-        console.log("using skills:", skillsQuery);
-        return await fetchData(skillsQuery);
-
-
-      default:
-        return [false, "Unknown query type"];
-    }
+  //checking if the queryType is valid
+  const query = queries[queryType];
+  if (!query) {
+      console.error(`Unknown query type: ${queryType}`);
+      return [false, "Unknown query type"];
   }
+
+  //doing the query through the fetchData function
+  return await fetchData(query);
+}
