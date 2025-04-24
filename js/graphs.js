@@ -215,7 +215,7 @@ function renderXPchart(xps){
       });
 
       // Y-axis (XP on the left side)
-    const yAxisSteps = 6;
+    const yAxisSteps = Math.ceil(maxY / stepSize);
     const stepSize = 100000;
     for (let i = 0; i <= yAxisSteps; i++) {
         const value = Math.round((maxY / yAxisSteps) * i / stepSize) * stepSize;
