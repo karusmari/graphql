@@ -1,10 +1,10 @@
 # GraphQL Profile Page with XP Visualization
 
-This project is a personal profile page built with HTML, JavaScript, and SVG. It connects to the [01 Gritlab GraphQL API](https://01.gritlab.ax/api/graphql-engine/v1/graphql) and allows authenticated users to view their own school-related data. The project was created to learn and demonstrate the use of GraphQL, DOM manipulation, and SVG-based data visualization.
+This project is a personal profile page built with HTML, JavaScript, and SVG. It connects to the Gritlab's GraphQL API and allows authenticated users to view their own school-related data. The project was created to learn and demonstrate the use of GraphQL, DOM manipulation, and SVG-based data visualization.
 
 ## 🌐 Live Demo
 
-You can check out the hosted version here: https://karusmari.github.io/graphql/
+You can check out the hosted version here in [Github] (https://karusmari.github.io/graphql/)
 
 ---
 
