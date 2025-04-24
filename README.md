@@ -4,7 +4,7 @@ This project is a personal profile page built with HTML, JavaScript, and SVG. It
 
 ## 🌐 Live Demo
 
-You can check out the hosted version here [https://karusmari.github.io/graphql/]
+You can check out the hosted version here: https://karusmari.github.io/graphql/
 
 ---
 
