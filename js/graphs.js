@@ -34,6 +34,7 @@ function renderSkillChart(skills) {
         const barWidth = (skill.amount / maxSkill) * (width - labelWidth); //the width of the bar
         const y = offsetY + index * (barHeight + spacing);
         const percentage = ((skill.amount / maxSkill) * 100).toFixed(1); //calculating the percentage
+        const skillName = skill.type.replace('skill_', '').replace('-', ' ').replace(/\b\w/g, char => char.toUpperCase());
 
         //background rectagle
         const bgrect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -53,7 +54,6 @@ function renderSkillChart(skills) {
         rect.setAttribute("fill", "rgb(103, 102, 102)");
         svg.appendChild(rect);
 
-        const skillName = skill.type.replace('skill_', '').replace('-', ' ').replace(/\b\w/g, char => char.toUpperCase());
 
          // creating the title
          const skillsText = "Received skills"; 
@@ -111,24 +111,23 @@ function renderXPchart(xps){
     const height = 450;
     const margin = 80;
 
-    //create svg element
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", width);
-    svg.setAttribute("height", height);
-
-    
     //ensuring that the xp data is valid and not empty
     if (!xps || xps.length === 0) {
         console.error("No XP data provided.");
         return;
     }
 
-    const sortedXP = [...xps].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    //create svg element
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
 
+
+    //creating the points for the graph
+    const sortedXP = [...xps].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     const points = [];
     let totalXP = 0;
 
-    //creating the points for the graph
     sortedXP.forEach(item => {
         const createdAt = new Date(item.createdAt);
         if (isNaN(createdAt)) return;
@@ -156,9 +155,8 @@ function renderXPchart(xps){
     };
     const scaleY = y => height - margin - (y / maxY) * (height - 2 * margin);
 
-    let pathD = "M ";
-    pathD += points.map(p => `${scaleX(p.x)},${scaleY(p.y)}`).join(" L ");
-
+    //drawing the line on the graph
+    let pathD = "M " + points.map(p => `${scaleX(p.x)},${scaleY(p.y)}`).join(" L ");
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", pathD);
     path.setAttribute("fill", "none");
@@ -166,6 +164,7 @@ function renderXPchart(xps){
     path.setAttribute("stroke-width", 2);
     svg.appendChild(path);
 
+    //tooltip to show the XP amount and project name
     let tooltip = document.getElementById("xp-tooltip");
     if (!tooltip) {
         tooltip = document.createElement("div");
@@ -182,7 +181,7 @@ function renderXPchart(xps){
     }
 
     points.forEach(p => {
-        if (p.amount > 10000) {
+        if (p.amount >= 5000) {
 
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circle.setAttribute("cx", scaleX(p.x));

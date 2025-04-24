@@ -23,12 +23,14 @@ async function renderProfileView() {
 
   window.scrollTo(0, 0); 
 
+  //hiding login and showing profile elements
   document.getElementById('login-section')?.remove();
   document.getElementById('user-header').style.display = 'flex';
   document.getElementById('profile-section').style.display = 'flex';
   document.getElementById('skills-chart').style.display = 'block';
+  document.getElementById('graph-section').style.display = 'block';
   
-  
+  //fetch and validate user data
   const [userInfoSuccess, userInfoData] = await fetchUserData('userInfo');
   const [xpSuccess, xpData] = await fetchUserData('userXP');
   const [skillsSuccess, skillsData] = await fetchUserData('userSkills');
@@ -49,9 +51,22 @@ async function renderProfileView() {
     return;
   }
 
+  //rendering the profile data
   const user = userInfoData.user?.[0];
   const attrs = user.attrs || {};
   const email = user.attrs?.email || "No email provided"; 
+  const auditRatio = userInfoData?.user[0]?.auditRatio || 'N/A'; 
+  const formattedAuditRatio = (auditRatio !== 'N/A') ? parseFloat(auditRatio).toFixed(1) : 'N/A';
+
+  //rendering the skills chart
+  const skills = skillsData?.user[0]?.skills || [];
+  if (skills.length > 0) {
+    renderSkillChart(skills);
+  } else {
+    document.getElementById('skills-chart').textContent = 'N/A';
+  }
+
+  //rendering the XP chart
   const xpTransactions = xpData.transaction || [];
   const filteredXps = xpTransactions.filter(xp =>
     xp.path &&
@@ -80,17 +95,9 @@ async function renderProfileView() {
       }, 0)
   : 0;
 
-  
-  const skills = skillsData?.user[0]?.skills || [];
-  
   renderXPchart(filteredXps);
   
-  if (skills.length > 0) {
-    renderSkillChart(skills);
-  } else {
-    document.getElementById('skills-chart').textContent = 'N/A';
-  }
-  document.getElementById('graph-section').style.display = 'block';
+  //filling the profile with data
   document.getElementById('header-email').textContent = email; 
   document.getElementById('id').textContent = `${user.id || 'N/A'}`;
   document.getElementById('profile-email').textContent = `${attrs.email || "No email provided"}`;
@@ -98,20 +105,7 @@ async function renderProfileView() {
   document.getElementById('profile-lastName').textContent = `${user.lastName || 'N/A'}`;
   document.getElementById('nationality').textContent = `${attrs.nationality || 'N/A'}`;
   document.getElementById('user-xp').textContent = `${xpAmount || 'N/A'}`;
-
-  const auditRatio = userInfoData?.user[0]?.auditRatio || 'N/A'; 
-  const formattedAuditRatio = (auditRatio !== 'N/A') ? parseFloat(auditRatio).toFixed(1) : 'N/A';
   document.getElementById('audit-ratio').textContent = `${formattedAuditRatio}`;
+
 }
 
-//handle logout button
-const logoutButton = document.getElementById('logout-button');
-if (logoutButton) {
-  logoutButton.addEventListener('click', () => {
-    logout();  
-    renderLoginView(); // Render the login view again
-    document.getElementById('user-header').style.display = 'none'; // Hide the user header
-  });
-} else {
-  console.error("Logout button not found");
-}

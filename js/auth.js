@@ -1,7 +1,6 @@
 async function login(username, password) {
     const credentials = btoa(`${username}:${password}`);
 
-    //I will send the decoded credentials to the server
     //POST request to the API address to get the token
     try {
         const response = await fetch('https://01.gritlab.ax/api/auth/signin', {
@@ -33,7 +32,7 @@ function isLoggedIn() {
 
 //logs out and removes the token
 function logout() {
-   sessionStorage.removeItem("jwt");
+    sessionStorage.removeItem("jwt");
     window.location.reload();
 }
 

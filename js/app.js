@@ -49,7 +49,6 @@ async function fetchData(query) {
     }
   }
 
-
 //function to query the data based on the query type
 async function fetchUserData(queryType) {
     const queries = {
@@ -67,4 +66,16 @@ async function fetchUserData(queryType) {
 
   //doing the query through the fetchData function
   return await fetchData(query);
+}
+
+//handle logout button
+const logoutButton = document.getElementById('logout-button');
+if (logoutButton) {
+  logoutButton.addEventListener('click', () => {
+    logout();  
+    renderLoginView(); // Render the login view again
+    document.getElementById('user-header').style.display = 'none'; // Hide the user header
+  });
+} else {
+  console.error("Logout button not found");
 }
