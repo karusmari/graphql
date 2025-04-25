@@ -6,23 +6,34 @@ function initApp() {
     renderLoginView();
   }
 }
-window.addEventListener('load', initApp);
+//when the DOM is loaded, the initApp function is called
+document.addEventListener('DOMContentLoaded', initApp);
+
 
 //function to query the user data 
-async function fetchData(query) {
-    const token = sessionStorage.getItem("jwt");
+async function fetchData(queryType) {
+  
+  //check if the user is logged in
+  if (!isLoggedIn()) {
+    console.warn("Not logged in - no token found");
+    return [false, "Not logged in"];
+  }
 
-    //check if the user is logged in
-    if (!token) {
-      console.warn("Not logged in - no token found");
-      return [false, "Not logged in"];
-    }
+   // Define queries inside the fetchData function
+   const queries = {
+    userInfo: getUserInfoQuery,
+    userXP: xpQuery,
+    userSkills: skillsQuery
+  };
+  
+  //check if the queryType is valid
+  const query = queries[queryType];
+  if (!query) {
+    console.error("No query provided");
+    return [false, "No query provided"];
+  }
 
-    //check if the query is valid
-    if (!query) {
-      console.error("No query provided");
-      return [false, "No query provided"];
-    }
+  const token = sessionStorage.getItem("jwt");
   
     try {
       const response = await fetch("https://01.gritlab.ax/api/graphql-engine/v1/graphql", {
@@ -38,6 +49,7 @@ async function fetchData(query) {
 
       //checking if the response is ok
       if (response.ok) {
+        console.log("Response data:", data);
         return [true, data.data];
       } else {
         console.error("Error response:", data.errors || "No data field"); 
@@ -49,24 +61,6 @@ async function fetchData(query) {
     }
   }
 
-//function to query the data based on the query type
-async function fetchUserData(queryType) {
-    const queries = {
-      userInfo: getUserInfoQuery,
-      userXP: xpQuery,
-      userSkills: skillsQuery
-  };
-
-  //checking if the queryType is valid
-  const query = queries[queryType];
-  if (!query) {
-      console.error(`Unknown query type: ${queryType}`);
-      return [false, "Unknown query type"];
-  }
-
-  //doing the query through the fetchData function
-  return await fetchData(query);
-}
 
 //handle logout button
 const logoutButton = document.getElementById('logout-button');

@@ -1,4 +1,5 @@
 async function login(username, password) {
+    //decoding the username and password to base64
     const credentials = btoa(`${username}:${password}`);
 
     //POST request to the API address to get the token
@@ -14,10 +15,10 @@ async function login(username, password) {
     const data = await response.json();
 
     if (response.ok) {
-            sessionStorage.setItem("jwt", data)
+            sessionStorage.setItem("jwt", data) //saving just the token from the data 
             return [true, data];
         } else {
-            console.error("Login failed: ", data.error);
+            console.error("Login failed: ", data.error); //the messages we see when something goes wrong in the login
             return [false, data.error || "An unknown error occurred"];
         }
     } catch (error) {
@@ -38,5 +39,10 @@ function logout() {
 
 //returns jwt token if it exists, otherwise null
 function getJWT(){
-    return sessionStorage.getItem("jwt");
+    const token = sessionStorage.getItem("jwt");
+    if (!token) {
+        console.error("No JWT token found in sessionStorage");
+    return null;
+        }
+    return token;
 }

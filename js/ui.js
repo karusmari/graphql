@@ -1,5 +1,6 @@
 function renderLoginView() {
   const loginForm = document.getElementById('login-form');
+  
   loginForm.addEventListener('submit', async (event) => { 
       event.preventDefault();
 
@@ -31,9 +32,9 @@ async function renderProfileView() {
   document.getElementById('graph-section').style.display = 'block';
   
   //fetch and validate user data
-  const [userInfoSuccess, userInfoData] = await fetchUserData('userInfo');
-  const [xpSuccess, xpData] = await fetchUserData('userXP');
-  const [skillsSuccess, skillsData] = await fetchUserData('userSkills');
+  const [userInfoSuccess, userInfoData] = await fetchData('userInfo');
+  const [xpSuccess, xpData] = await fetchData('userXP');
+  const [skillsSuccess, skillsData] = await fetchData('userSkills');
   
   //checking if the data has been received and is valid
   if (!userInfoSuccess || !userInfoData?.user || userInfoData.user.length === 0) {

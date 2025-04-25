@@ -137,7 +137,7 @@ function renderXPchart(xps){
             x: createdAt.getTime(), 
             y: totalXP,
             amount: item.amount,
-            path: item.path //path of the project (fot the tooltip)
+            path: item.path //path of the project (for the tooltip)
         });
     });
 
@@ -215,8 +215,8 @@ function renderXPchart(xps){
       });
 
       // Y-axis (XP on the left side)
-    const yAxisSteps = Math.ceil(maxY / stepSize);
-    const stepSize = 100000;
+        const stepSize = 100000;
+        const yAxisSteps = Math.ceil(maxY / stepSize);
     for (let i = 0; i <= yAxisSteps; i++) {
         const value = Math.round((maxY / yAxisSteps) * i / stepSize) * stepSize;
         const y = scaleY(value);
